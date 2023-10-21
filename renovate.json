@@ -8,7 +8,10 @@
       "matchPackageNames": ["*"],
       "groupName": "all dependencies",
       "separateMajorMinor": false,
+      "enabled": true,
       "automerge": true,
+      "automergeType": "pr",
+      "platformAutomerge": false,
       "ignoreTests": true
     }
   ]
