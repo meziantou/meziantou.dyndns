@@ -1,6 +1,7 @@
 ﻿using Meziantou.DynDns;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.Configure<DynDnsConfiguration>(builder.Configuration.GetSection("DynDns"));
 builder.Services.Configure<CloudflareConfiguration>(builder.Configuration.GetSection("Cloudflare"));
 builder.Services.AddSingleton<DnsUpdater, CloudflareDnsUpdater>();
 builder.Services.AddHostedService<DynDnsService>();

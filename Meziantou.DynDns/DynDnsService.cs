@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using Microsoft.Extensions.Options;
 
 namespace Meziantou.DynDns;
 internal sealed partial class DynDnsService : BackgroundService
@@ -7,18 +8,20 @@ internal sealed partial class DynDnsService : BackgroundService
 
     private readonly ILogger<DynDnsService> _logger;
     private readonly IEnumerable<DnsUpdater> _dnsUpdaters;
+    private readonly DynDnsConfiguration _configuration;
 
-    public DynDnsService(ILogger<DynDnsService> logger, IEnumerable<DnsUpdater> dnsUpdaters)
+    public DynDnsService(ILogger<DynDnsService> logger, IEnumerable<DnsUpdater> dnsUpdaters, IOptions<DynDnsConfiguration> configuration)
     {
         _logger = logger;
         _dnsUpdaters = dnsUpdaters;
+        _configuration = configuration.Value;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         var parallelOptions = new ParallelOptions { CancellationToken = stoppingToken };
 
-        using var timer = new PeriodicTimer(TimeSpan.FromMinutes(5));
+        using var timer = new PeriodicTimer(_configuration.UpdatePeriod);
         do
         {
             var address = await GetIpAddressAsync(stoppingToken);

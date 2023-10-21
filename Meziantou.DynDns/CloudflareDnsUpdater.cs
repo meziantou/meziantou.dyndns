@@ -8,12 +8,12 @@ namespace Meziantou.DynDns;
 internal sealed partial class CloudflareDnsUpdater : DnsUpdater
 {
     private readonly ILogger<CloudflareDnsUpdater> _logger;
-    private readonly IOptions<CloudflareConfiguration> _configuration;
+    private readonly CloudflareConfiguration _configuration;
 
     public CloudflareDnsUpdater(ILogger<CloudflareDnsUpdater> logger, IOptions<CloudflareConfiguration> configuration)
     {
         _logger = logger;
-        _configuration = configuration;
+        _configuration = configuration.Value;
     }
 
     public override async Task UpdateAsync(IPAddress address, CancellationToken cancellationToken)
@@ -24,8 +24,8 @@ internal sealed partial class CloudflareDnsUpdater : DnsUpdater
 
     private async Task<ListDnsResponseEntry> GetRecord(CancellationToken cancellationToken)
     {
-        using var request = new HttpRequestMessage(HttpMethod.Get, $"https://api.cloudflare.com/client/v4/zones/{Uri.EscapeDataString(_configuration.Value.ZoneId)}/dns_records?name={Uri.EscapeDataString(_configuration.Value.RecordName)}");
-        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _configuration.Value.ApiToken);
+        using var request = new HttpRequestMessage(HttpMethod.Get, $"https://api.cloudflare.com/client/v4/zones/{Uri.EscapeDataString(_configuration.ZoneId)}/dns_records?name={Uri.EscapeDataString(_configuration.RecordName)}");
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _configuration.ApiToken);
 
         using var response = await SharedHttpClient.Instance.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
         var result = await response.Content.ReadFromJsonAsync(CloudflareGenerationContext.Default.ListDnsResponse, cancellationToken);
@@ -33,7 +33,7 @@ internal sealed partial class CloudflareDnsUpdater : DnsUpdater
         if (result?.Result is [var item, ..])
             return item;
 
-        throw new DynDnsException($"Cannot find record '{_configuration.Value.RecordName}'");
+        throw new DynDnsException($"Cannot find record '{_configuration.RecordName}'");
     }
 
     private async Task UpdateRecord(ListDnsResponseEntry record, IPAddress address, CancellationToken cancellationToken)
@@ -48,14 +48,14 @@ internal sealed partial class CloudflareDnsUpdater : DnsUpdater
         if (type == null)
             return;
 
-        using var request = new HttpRequestMessage(HttpMethod.Patch, $"https://api.cloudflare.com/client/v4/zones/{Uri.EscapeDataString(_configuration.Value.ZoneId)}/dns_records/{Uri.EscapeDataString(record.Id!)}");
-        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _configuration.Value.ApiToken);
+        using var request = new HttpRequestMessage(HttpMethod.Patch, $"https://api.cloudflare.com/client/v4/zones/{Uri.EscapeDataString(_configuration.ZoneId)}/dns_records/{Uri.EscapeDataString(record.Id!)}");
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _configuration.ApiToken);
 
         var data = new UpdateEntryData
         {
             Type = type,
             Content = address.ToString(),
-            Name = _configuration.Value.RecordName,
+            Name = _configuration.RecordName,
         };
         request.Content = JsonContent.Create(data, CloudflareGenerationContext.Default.UpdateEntryData);
 
