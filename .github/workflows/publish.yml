@@ -1,7 +1,9 @@
 on:
   push:
     branches:
-    - main
+      - main
+  schedule:
+    - cron: "0 6 * * *" # rebuild image once a day to get latest updates from base image
 
 jobs:
   publish_docker:
