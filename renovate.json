@@ -3,12 +3,13 @@
   "extends": [
     "config:base"
   ],
-  "schedule": ["after 9pm on sunday"],
   "packageRules": [
     {
       "matchPackageNames": ["*"],
       "groupName": "all dependencies",
-      "separateMajorMinor": false
+      "separateMajorMinor": false,
+      "automerge": true,
+      "ignoreTests": true
     }
   ]
 }
