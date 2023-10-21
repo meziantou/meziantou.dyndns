@@ -6,6 +6,7 @@
   "schedule": ["after 9pm on sunday"],
   "packageRules": [
     {
+      "matchPackageNames": ['*'],
       "groupName": "all dependencies",
       "separateMajorMinor": false
     }
