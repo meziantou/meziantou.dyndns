@@ -4,6 +4,10 @@ on:
       - main
   schedule:
     - cron: "0 6 * * *" # rebuild image once a day to get latest updates from base image
+    
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   publish_docker:
@@ -17,7 +21,7 @@ jobs:
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v3        
 
-      - name: Log in to Docker Hub
+      - name: Log in to Docker
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
