@@ -5,7 +5,7 @@
   ],
   "packageRules": [
     {
-      "matchPackageNames": ["*"],
+      "matchPackagePatterns": [".*"],
       "groupName": "all dependencies",
       "separateMajorMinor": false,
       "enabled": true,
