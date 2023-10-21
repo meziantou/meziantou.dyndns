@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <UserSecretsId>fc3c1a9f-75d7-457a-a977-cfc6d469880a</UserSecretsId>
+    <EnableSdkContainerSupport>true</EnableSdkContainerSupport>
+
+    <ContainerRegistry>ghcr.io</ContainerRegistry>
+    <ContainerRepository>meziantou/dyndns</ContainerRepository>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Meziantou.DotNet.CodingStandard" Version="1.0.82">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0-rc.2.23479.6" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,10 @@
+﻿[*.cs]
+
+# MA0004: Use Task.ConfigureAwait(false)
+dotnet_diagnostic.MA0004.severity = none
+
+# CA1812: Avoid uninstantiated internal classes
+dotnet_diagnostic.CA1812.severity = none
+
+# CA2234: Pass system uri objects instead of strings
+dotnet_diagnostic.CA2234.severity = none
