@@ -14,7 +14,7 @@
 
  
   <ItemGroup>
-    <PackageReference Include="Meziantou.DotNet.CodingStandard" Version="1.0.97">
+    <PackageReference Include="Meziantou.DotNet.CodingStandard" Version="1.0.98">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
