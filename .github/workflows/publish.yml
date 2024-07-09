@@ -16,13 +16,13 @@ jobs:
         contents: read
         packages: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
   
       - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v4        
+        uses: actions/setup-dotnet@6bd8b7f7774af54e05809fcc5431931b3eb1ddee # v4        
 
       - name: Log in to Docker
-        uses: docker/login-action@v3
+        uses: docker/login-action@0d4c9c5ea7693da7b068278f7b52bda2a190a446 # v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
