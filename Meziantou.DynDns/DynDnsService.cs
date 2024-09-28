@@ -2,32 +2,22 @@
 using Microsoft.Extensions.Options;
 
 namespace Meziantou.DynDns;
-internal sealed partial class DynDnsService : BackgroundService
+internal sealed partial class DynDnsService(ILogger<DynDnsService> logger, IEnumerable<DnsUpdater> dnsUpdaters, IOptions<DynDnsConfiguration> configuration, DnsUpdaterState state) : BackgroundService
 {
     private static readonly string[] IpServiceUrls = ["https://ipinfo.io/ip", "https://api.ipify.org/", "https://api.infoip.io/ip"];
-
-    private readonly ILogger<DynDnsService> _logger;
-    private readonly IEnumerable<DnsUpdater> _dnsUpdaters;
-    private readonly DynDnsConfiguration _configuration;
-
-    public DynDnsService(ILogger<DynDnsService> logger, IEnumerable<DnsUpdater> dnsUpdaters, IOptions<DynDnsConfiguration> configuration)
-    {
-        _logger = logger;
-        _dnsUpdaters = dnsUpdaters;
-        _configuration = configuration.Value;
-    }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         var parallelOptions = new ParallelOptions { CancellationToken = stoppingToken };
 
-        using var timer = new PeriodicTimer(_configuration.UpdatePeriod);
+        using var timer = new PeriodicTimer(configuration.Value.UpdatePeriod);
         do
         {
             var address = await GetIpAddressAsync(stoppingToken);
             if (address != null)
             {
-                await Parallel.ForEachAsync(_dnsUpdaters, parallelOptions, async (dns, cancellationToken) => await dns.UpdateAsync(address, cancellationToken));
+                await Parallel.ForEachAsync(dnsUpdaters, parallelOptions, async (dns, cancellationToken) => await dns.UpdateAsync(address, cancellationToken));
+                state.LastUpdatedAt = DateTimeOffset.UtcNow;
             }
         } while (await timer.WaitForNextTickAsync(stoppingToken));
     }
@@ -44,7 +34,7 @@ internal sealed partial class DynDnsService : BackgroundService
             }
             catch (Exception ex)
             {
-                Log.CouldNotGetIpAddress(_logger, ex, url);
+                Log.CouldNotGetIpAddress(logger, ex, url);
             }
         }
 
