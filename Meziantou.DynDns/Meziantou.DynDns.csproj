@@ -10,6 +10,7 @@
    
     <ContainerRegistry>ghcr.io</ContainerRegistry>
     <ContainerRepository>meziantou/dyndns</ContainerRepository>
+    <ContainerImageTags>1.0.$(GITHUB_RUN_NUMBER);latest</ContainerImageTags>
   </PropertyGroup>
 
  
