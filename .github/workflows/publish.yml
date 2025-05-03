@@ -2,8 +2,6 @@ on:
   push:
     branches:
       - main
-  schedule:
-    - cron: "0 6 * * *" # rebuild image once a day to get latest updates from base image
     
 concurrency:
   group: ci-${{ github.ref }}
