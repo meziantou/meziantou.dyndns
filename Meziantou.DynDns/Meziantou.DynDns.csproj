@@ -10,7 +10,8 @@
    
     <ContainerRegistry>ghcr.io</ContainerRegistry>
     <ContainerRepository>meziantou/dyndns</ContainerRepository>
-    <ContainerImageTags>1.0.$(GITHUB_RUN_NUMBER);latest</ContainerImageTags>
+    <ContainerImageTags>0.0.1-preview</ContainerImageTags>
+    <ContainerImageTags Condition="$(GITHUB_REF) == 'refs/heads/main'">1.0.$(GITHUB_RUN_NUMBER);latest</ContainerImageTags>
   </PropertyGroup>
 
  
