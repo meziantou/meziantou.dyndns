@@ -1,7 +1,7 @@
 on:
+  workflow_dispatch:
   push:
-    branches: ['*']
-    
+
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: false
