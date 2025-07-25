@@ -1,4 +1,5 @@
-﻿using System.Net;
+using System.Net;
+using System.Net.Http;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Options;
@@ -8,11 +9,13 @@ namespace Meziantou.DynDns;
 internal sealed partial class CloudflareDnsUpdater : DnsUpdater
 {
     private readonly ILogger<CloudflareDnsUpdater> _logger;
+    private readonly HttpClient _httpClient;
     private readonly CloudflareConfiguration _configuration;
 
-    public CloudflareDnsUpdater(ILogger<CloudflareDnsUpdater> logger, IOptions<CloudflareConfiguration> configuration)
+    public CloudflareDnsUpdater(ILogger<CloudflareDnsUpdater> logger, IOptions<CloudflareConfiguration> configuration, HttpClient httpClient)
     {
         _logger = logger;
+        _httpClient = httpClient;
         _configuration = configuration.Value;
     }
 
@@ -27,7 +30,7 @@ internal sealed partial class CloudflareDnsUpdater : DnsUpdater
         using var request = new HttpRequestMessage(HttpMethod.Get, $"https://api.cloudflare.com/client/v4/zones/{Uri.EscapeDataString(_configuration.ZoneId)}/dns_records?name={Uri.EscapeDataString(_configuration.RecordName)}");
         request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _configuration.ApiToken);
 
-        using var response = await SharedHttpClient.Instance.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+        using var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
         var result = await response.Content.ReadFromJsonAsync(CloudflareGenerationContext.Default.ListDnsResponse, cancellationToken);
 
         if (result?.Result is [var item, ..])
@@ -59,7 +62,7 @@ internal sealed partial class CloudflareDnsUpdater : DnsUpdater
         };
         request.Content = JsonContent.Create(data, CloudflareGenerationContext.Default.UpdateEntryData);
 
-        using var response = await SharedHttpClient.Instance.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+        using var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
         if (!response.IsSuccessStatusCode)
         {
             var error = await response.Content.ReadAsStringAsync(cancellationToken);

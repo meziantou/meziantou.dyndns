@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>    
     <OutputType>Exe</OutputType>
@@ -14,8 +14,8 @@
     <ContainerImageTags Condition="$(GITHUB_REF) == 'refs/heads/main'">1.0.$(GITHUB_RUN_NUMBER);latest</ContainerImageTags>
   </PropertyGroup>
 
- 
   <ItemGroup>
+    <PackageReference Include="Meziantou.AspNetCore.ServiceDefaults" Version="1.0.5" />
     <PackageReference Include="Meziantou.DotNet.CodingStandard" Version="1.0.166">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

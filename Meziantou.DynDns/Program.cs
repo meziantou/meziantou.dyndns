@@ -1,6 +1,9 @@
-﻿using Meziantou.DynDns;
+using Meziantou.AspNetCore.ServiceDefaults;
+using Meziantou.DynDns;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.UseMeziantouConventions();
+
 builder.Services.Configure<DynDnsConfiguration>(builder.Configuration.GetSection("DynDns"));
 builder.Services.Configure<CloudflareConfiguration>(builder.Configuration.GetSection("Cloudflare"));
 builder.Services.AddSingleton<DnsUpdater, CloudflareDnsUpdater>();
@@ -11,6 +14,6 @@ builder.Services.AddHealthChecks()
 builder.Services.Configure<HostOptions>(options => options.BackgroundServiceExceptionBehavior = BackgroundServiceExceptionBehavior.StopHost);
 
 var host = builder.Build();
-host.UseHealthChecks("/health");
+host.MapMeziantouDefaultEndpoints();
 
 await host.RunAsync();

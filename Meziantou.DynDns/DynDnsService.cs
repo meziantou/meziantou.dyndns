@@ -1,8 +1,8 @@
-﻿using System.Net;
+using System.Net;
 using Microsoft.Extensions.Options;
 
 namespace Meziantou.DynDns;
-internal sealed partial class DynDnsService(ILogger<DynDnsService> logger, IEnumerable<DnsUpdater> dnsUpdaters, IOptions<DynDnsConfiguration> configuration, DnsUpdaterState state) : BackgroundService
+internal sealed partial class DynDnsService(ILogger<DynDnsService> logger, IEnumerable<DnsUpdater> dnsUpdaters, IOptions<DynDnsConfiguration> configuration, DnsUpdaterState state, HttpClient httpClient) : BackgroundService
 {
     private static readonly string[] IpServiceUrls = ["https://ipinfo.io/ip", "https://api.ipify.org/", "https://api.infoip.io/ip"];
 
@@ -28,7 +28,7 @@ internal sealed partial class DynDnsService(ILogger<DynDnsService> logger, IEnum
         {
             try
             {
-                var address = await SharedHttpClient.Instance.GetStringAsync(url, cancellationToken);
+                var address = await httpClient.GetStringAsync(url, cancellationToken);
                 if (IPAddress.TryParse(address, out var ipAddress))
                     return ipAddress;
             }
