@@ -14,7 +14,7 @@ internal sealed partial class DynDnsService(ILogger<DynDnsService> logger, IEnum
         do
         {
             var address = await GetIpAddressAsync(stoppingToken);
-            if (address != null)
+            if (address is not null)
             {
                 await Parallel.ForEachAsync(dnsUpdaters, parallelOptions, async (dns, cancellationToken) => await dns.UpdateAsync(address, cancellationToken));
                 state.LastUpdatedAt = DateTimeOffset.UtcNow;

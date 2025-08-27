@@ -1,5 +1,4 @@
 using System.Net;
-using System.Net.Http;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Options;
@@ -48,7 +47,7 @@ internal sealed partial class CloudflareDnsUpdater : DnsUpdater
             _ => null,
         };
 
-        if (type == null)
+        if (type is null)
             return;
 
         using var request = new HttpRequestMessage(HttpMethod.Patch, $"https://api.cloudflare.com/client/v4/zones/{Uri.EscapeDataString(_configuration.ZoneId)}/dns_records/{Uri.EscapeDataString(record.Id!)}");
