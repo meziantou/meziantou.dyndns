@@ -1,4 +1,4 @@
-<Project Sdk="mEZIANTOU.NET.Sdk.Web">
+<Project Sdk="Meziantou.NET.Sdk.Web">
 
   <PropertyGroup>    
     <UserSecretsId>fc3c1a9f-75d7-457a-a977-cfc6d469880a</UserSecretsId>
