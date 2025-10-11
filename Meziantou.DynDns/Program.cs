@@ -9,7 +9,6 @@ builder.Services.AddSingleton<DnsUpdaterState>();
 builder.Services.AddHostedService<DynDnsService>();
 builder.Services.AddHealthChecks()
     .AddTypeActivatedCheck<DnsUpdaterHealthCheck>("DnsUpdater");
-builder.Services.Configure<HostOptions>(options => options.BackgroundServiceExceptionBehavior = BackgroundServiceExceptionBehavior.StopHost);
 
 var host = builder.Build();
 await host.RunAsync();
