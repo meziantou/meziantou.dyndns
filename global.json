@@ -4,8 +4,8 @@
     "rollForward": "latestMajor"
   },
   "msbuild-sdks": {
-    "Meziantou.NET.Sdk": "1.0.63",
-    "Meziantou.NET.Sdk.Test": "1.0.63",
-    "Meziantou.NET.Sdk.Web": "1.0.63"
+    "Meziantou.NET.Sdk": "1.0.65",
+    "Meziantou.NET.Sdk.Test": "1.0.65",
+    "Meziantou.NET.Sdk.Web": "1.0.65"
   }
 }
