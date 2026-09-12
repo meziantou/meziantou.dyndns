@@ -75,7 +75,7 @@ internal sealed partial class CloudflareDnsUpdater : DnsUpdater
         public static partial void CouldNotUpdateRecord(ILogger logger, string message);
     }
 
-    [JsonSourceGenerationOptions(DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull, PropertyNameCaseInsensitive = false)]
+    [JsonSourceGenerationOptions(DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull, PropertyNameCaseInsensitive = false, RespectNullableAnnotations = true, RespectRequiredConstructorParameters = true)]
     [JsonSerializable(typeof(ListDnsResponse))]
     [JsonSerializable(typeof(ListDnsResponseEntry))]
     [JsonSerializable(typeof(UpdateEntryData))]
